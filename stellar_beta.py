@@ -29,6 +29,7 @@ def generatePlankCurve(temp, xs, startOfRed):
         pEs.append(planckEquation(xs[i], temp))
 
     #normalising values
+    # plot forced to go through (4500, 1)
     pEs_normalising_factor = pEs[startOfRed]
 
     for i in range(len(xs)):
@@ -36,13 +37,10 @@ def generatePlankCurve(temp, xs, startOfRed):
 
     return pEs
 
-# reading in file and producing plot
+# reading in file and storing columns into two lists
 lines = [line.rstrip('\n').split('\t') for line in open('star_spec.dat.txt')]
-
 xs = []
 ys = []
-
-
 for line in lines:
     xs.append(float(line[0]))
     ys.append(float(line[1]))
@@ -53,18 +51,34 @@ for i in range(len(xs)):
         startOfRed = i
         break
 
-ys_normal =  ys[startOfRed]
-
 #normalising y values:
+# plots forced to go through (4500, 1)
+ys_normal =  ys[startOfRed]
 for i in range(len(xs)):
     ys[i] = ys[i]/ys_normal
 
 pEs = generatePlankCurve(11000, xs, startOfRed)
 print getMeanSquareDif(pEs, ys, startOfRed)
 
+last_MSD    = 100000000
+current_MSD =  10000000
+temp = 3000
+
+while (current_MSD < last_MSD):
+    pEs = generatePlankCurve(temp, xs, startOfRed)
+    last_MSD = current_MSD
+    current_MSD = getMeanSquareDif(pEs, ys, startOfRed)
+    temp = temp + 100
+
+print temp
+print last_MSD
+
+pEs = generatePlankCurve(temp - 100, xs, startOfRed)
+pEs2 = generatePlankCurve(temp, xs, startOfRed)
 
 plt.plot(xs, pEs)    
 plt.plot(xs, ys)
+plt.plot(xs, pEs2)
 
 plt.xlabel('wavelength')
 plt.ylabel('intensity')
