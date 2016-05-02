@@ -80,8 +80,12 @@ pEs3 = generatePlankCurve(9800, xs, startOfRed)
 minimum = min(ys[0:len(ys)/2])
 print "Minimum is: " + str(minimum)
 
-absorptionWL = xs[ys.index(minimum)] 
+absorptionWL = -1
 print ys.index(minimum)
+for i in range(len(xs)):
+    if xs[i] == minimum:
+        absorptionWL = xs[i]
+        break
 
 print "And that is at absorption line: " + str(absorptionWL)
 
