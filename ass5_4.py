@@ -3,6 +3,7 @@ import numpy as np
 import matplotlib.mlab as mlab
 import matplotlib.pyplot as plt
 import pylab as pl
+import matplotlib.cm as cm
 
 # Constants:
 R0 = 10 #kpc # distance from sun to galactic centre in parsecs (approx)
@@ -20,40 +21,129 @@ def vel(r, l):
 
     return R0*(V / R - V0 / R0)*math.sin(l)
 
-def main2():
-    l = math.pi/2
-    x = np.linspace(0,20,100)
-    y = [vel(r, l) for r in x]
+def vel2(r, l):
+    R = math.sqrt(r**2 + R0**2 - 2*r*R0*math.cos(l)) #kpc
+    #print "For r: " + str(r) + " and angle: " + str(l) + \
+    #       " R is: " + str(R)
+
+    if R < 5 and R >= 0:
+        V = 50*R #km/s
+    elif R >= 5:
+        V = 250 #km/s
+
+    if R > 4 and R < 6:
+        bright = True
+    else:
+        bright = False
+
+    return R0*(V / R - V0 / R0)*math.sin(l), bright
+
+
+def vel3(r, l):
+    R = math.sqrt(r**2 + R0**2 - 2*r*R0*math.cos(l)) #kpc
+    #print "For r: " + str(r) + " and angle: " + str(l) + \
+    #       " R is: " + str(R)
+
+    if R < 5 and R >= 0:
+        V = 50*R #km/s
+    elif R >= 5:
+        V = 250 #km/s
+
+    if R > 4 and R < 6:
+        bright = True
+        vel_rad = 50*math.cos( math.asin( math.sin(l)*R/R0 ) )
+    else:
+        vel_rad = 0
+        bright = False
+
+    return R0*(V / R - V0 / R0)*math.sin(l) - vel_rad, bright
+
+
+def main3():
+    longitude_array = np.zeros((DATA_DIM,DATA_DIM))
+    velocity_array = np.zeros((DATA_DIM,DATA_DIM))
+
+    longitude_vals = np.linspace(0, math.pi/2, DATA_DIM)
+    r_vals = np.linspace(0, 20, DATA_DIM) # change r_max to higher when working
     
+    duplicates_long = []
+    duplicates_vels = []
 
-    n, bins, patches = plt.hist(y, 30)
+    for i in range(DATA_DIM):
+        for j in range(DATA_DIM):
+            longitude_array[i,j] = longitude_vals[j]
+            velocity_array[i,j], bright = vel3(r_vals[i], longitude_vals[j])
+            if bright:
+                duplicates_long.append(longitude_vals[j])
+                vel, dummy = vel3(r_vals[i], longitude_vals[j])
+                duplicates_vels.append(vel)
+                 
+    #print longitude_array.flatten().tolist().append(duplicates_long)
+    print
+    #print velocity_array
 
-    print bins
+    plt.hist2d(longitude_array.flatten().tolist() + duplicates_long,
+            velocity_array.flatten().tolist() + duplicates_vels,
+            200, cmin=1)
 
-    plt.show()
+    #plt.colorbar()
+    plt.savefig("4d.png")
+
+
+def main2():
+    longitude_array = np.zeros((DATA_DIM,DATA_DIM))
+    velocity_array = np.zeros((DATA_DIM,DATA_DIM))
+
+    longitude_vals = np.linspace(0, math.pi/2, DATA_DIM)
+    r_vals = np.linspace(0, 20, DATA_DIM) # change r_max to higher when working
+    
+    duplicates_long = []
+    duplicates_vels = []
+
+    for i in range(DATA_DIM):
+        for j in range(DATA_DIM):
+            longitude_array[i,j] = longitude_vals[j]
+            velocity_array[i,j], bright = vel2(r_vals[i], longitude_vals[j])
+            if bright:
+                duplicates_long.append(longitude_vals[j])
+                vel, dummy = vel2(r_vals[i], longitude_vals[j])
+                duplicates_vels.append(vel)
+                 
+    #print longitude_array.flatten().tolist().append(duplicates_long)
+    print
+    #print velocity_array
+
+    plt.hist2d(longitude_array.flatten().tolist() + duplicates_long,
+            velocity_array.flatten().tolist() + duplicates_vels,
+            200, cmin=1)
+
+    #plt.colorbar()
+    plt.savefig("4c.png")
+
 
 def main():
-    # generate a list for each l:
-    listoflistsr = []
-    listoflistsvel = []
-    listoflistsl = []
-    listofls = np.linspace(1,math.pi/2,1000).flatten().tolist()
-    for l in listofls:
-        r_list = np.linspace(0,20,1000).flatten().tolist()
-        mylist = [vel(r,l) for r in r_list]
-        listoflistsl.append(listofls)
-        listoflistsvel.append(mylist)
-        listoflistsr.append(r_list)
+    longitude_array = np.zeros((DATA_DIM,DATA_DIM))
+    velocity_array = np.zeros((DATA_DIM,DATA_DIM))
+
+    longitude_vals = np.linspace(0, math.pi/2, DATA_DIM)
+    r_vals = np.linspace(0, 20, DATA_DIM) # change r_max to higher when working
+    
+    for i in range(DATA_DIM):
+        for j in range(DATA_DIM):
+            longitude_array[i,j] = longitude_vals[j]
+            velocity_array[i,j] = vel(r_vals[i], longitude_vals[j])
+    
+    #print longitude_array
+    #print
+    #print velocity_array
+
+    plt.hist2d(longitude_array.flatten().tolist(),
+            velocity_array.flatten().tolist(), 200, cmin=1)
+
+    plt.savefig("4b.png")
 
 
-    flat_ls   = [j for i in listoflistsl for j in i]
-    flat_vels = [j for i in listoflistsvel for j in i]
-    flat_rs = [j for i in listoflistsr for j in i]
-
-    #print flat_vels
-
-    plt.hist2d(flat_ls, flat_vels, 100)
-    plt.show()
-
+DATA_DIM = 500 
 main()
-
+main2()
+main3()
