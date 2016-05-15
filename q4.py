@@ -85,30 +85,7 @@ def vel5(r, l, R):
 
     return R0*(V / R - V0 / R0)*math.sin(l), duplicate
 
-
-
-
-def main4():
-    xs = np.linspace(0.001,15,400)
-    ys = np.linspace(0.001,25,800)
-
-    l_list = []
-    vel_list = []
-
-    for i in range(len(xs)):
-        for j in range(len(ys)):
-            r = math.sqrt( ys[j]**2 + xs[i]**2 )
-            l = math.atan( xs[i] / ys[j] )
-            R = math.sqrt( (ys[j] - 10)**2 + xs[i]**2)
-            if (R < 15):
-                l_list.append(l)
-                vel_list.append(vel4(r, l, R))
-
-    plt.hist2d(l_list, vel_list, 50, cmin=1)
-    plt.show()
-
-
-def main():
+def partB():
     ls = np.linspace(0.001, math.pi/2, 400)
     rs = np.linspace(0.001, 25, 400)
     
@@ -123,6 +100,27 @@ def main():
                 vel_list.append(vel4(rs[j], ls[i], R))
 
     plt.hist2d(l_list, vel_list, 50, cmin=1)
-    plt.show()
+    plt.savefig("partb.png")
             
-main()
+def partC():
+    ls = np.linspace(0.001, math.pi/2, 400)
+    rs = np.linspace(0.001, 25, 400)
+    
+    l_list = []
+    vel_list = []
+
+    for i in range(len(ls)):
+        for j in range(len(rs)):
+            R = math.sqrt(rs[j]**2 + 10**2 - 2 * 10 * rs[j] * math.cos(ls[i]))
+            if (R < 15):
+                l_list.append(ls[i])
+                vel_list.append(vel4(rs[j], ls[i], R))
+                if (R > 4 and R < 6):
+                    l_list.append(ls[i])
+                    vel_list.append(vel4(rs[j], ls[i], R))
+
+    plt.hist2d(l_list, vel_list, 50, cmin=1)
+    plt.savefig("partc.png")
+ 
+partB()
+partC()
