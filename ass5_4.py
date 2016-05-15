@@ -58,6 +58,72 @@ def vel3(r, l):
 
     return R0*(V / R - V0 / R0)*math.sin(l) - vel_rad, bright
 
+def vel4(r, l, R):
+    #print "For r: " + str(r) + " and angle: " + str(l) + \
+    #       " R is: " + str(R)
+
+    if R < 5 and R >= 0:
+        V = 50*R #km/s
+    elif R >= 5:
+        V = 250 #km/s
+
+    return R0*(V / R - V0 / R0)*math.sin(l)
+
+def vel5(r, l, R):
+    #print "For r: " + str(r) + " and angle: " + str(l) + \
+    #       " R is: " + str(R)
+
+    if R < 5 and R >= 0:
+        V = 50*R #km/s
+    elif R >= 5:
+        V = 250 #km/s
+
+    if R < 6 and R > 4:
+        duplicate = True
+    else:
+        duplicate = False
+
+    return R0*(V / R - V0 / R0)*math.sin(l), duplicate
+
+
+def main4():
+    xs = np.linspace(0.001,15,400)
+    ys = np.linspace(0.001,25,800)
+
+    l_list = []
+    vel_list = []
+
+    for i in range(len(xs)):
+        for j in range(len(ys)):
+            r = math.sqrt( ys[j]**2 + xs[i]**2 )
+            l = math.atan( xs[i] / ys[j] )
+            R = math.sqrt( (ys[j] - 10)**2 + xs[i]**2)
+            if (R < 15):
+                l_list.append(l)
+                vel_list.append(vel4(r, l, R))
+
+    plt.hist2d(l_list, vel_list, 50, cmin=1)
+    plt.show()
+
+
+def main4():
+    xs = np.linspace(0.001,15,400)
+    ys = np.linspace(0.001,25,800)
+
+    l_list = []
+    vel_list = []
+
+    for i in range(len(xs)):
+        for j in range(len(ys)):
+            r = math.sqrt( ys[j]**2 + xs[i]**2 )
+            l = math.atan( xs[i] / ys[j] )
+            R = math.sqrt( (ys[j] - 10)**2 + xs[i]**2)
+            if (R < 15):
+                l_list.append(l)
+                vel_list.append(vel4(r, l, R))
+
+    plt.hist2d(l_list, vel_list, 50, cmin=1)
+    plt.show()
 
 def main3():
     longitude_array = np.zeros((DATA_DIM,DATA_DIM))
@@ -95,7 +161,7 @@ def main2():
     velocity_array = np.zeros((DATA_DIM,DATA_DIM))
 
     longitude_vals = np.linspace(0, math.pi/2, DATA_DIM)
-    r_vals = np.linspace(0, 20, DATA_DIM) # change r_max to higher when working
+    r_vals = np.linspace(0, 30, DATA_DIM) # change r_max to higher when working
     
     duplicates_long = []
     duplicates_vels = []
@@ -126,7 +192,7 @@ def main():
     velocity_array = np.zeros((DATA_DIM,DATA_DIM))
 
     longitude_vals = np.linspace(0, math.pi/2, DATA_DIM)
-    r_vals = np.linspace(0, 20, DATA_DIM) # change r_max to higher when working
+    r_vals = np.linspace(0, 30, DATA_DIM) # change r_max to higher when working
     
     for i in range(DATA_DIM):
         for j in range(DATA_DIM):
@@ -138,12 +204,13 @@ def main():
     #print velocity_array
 
     plt.hist2d(longitude_array.flatten().tolist(),
-            velocity_array.flatten().tolist(), 200, cmin=1)
+            velocity_array.flatten().tolist(), 200, cmin=1,
+            cmap = plt.get_cmap('gray'))
 
     plt.savefig("4b.png")
 
 
 DATA_DIM = 500 
-main()
-main2()
-main3()
+main4()
+#main2()
+#main3()
