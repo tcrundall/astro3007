@@ -1,0 +1,24 @@
+5e+19 resulted with a difference of 1.0587134772%
+1e+20 resulted with a difference of 2.30095949771%
+1.5e+20 resulted with a difference of 3.32222522423%
+2e+20 resulted with a difference of 4.85563948421%
+2.5e+20 resulted with a difference of 5.8837681991%
+3e+20 resulted with a difference of 6.94264515138%
+3.5e+20 resulted with a difference of 8.5089867597%
+4e+20 resulted with a difference of 9.55607434459%
+4.5e+20 resulted with a difference of 10.6043993372%
+5e+20 resulted with a difference of 11.6469259057%
+NH is: 2.5e+20
+Noise is: 3
+Difference of noise with gaus: 7.7850605262
+Difference of noise with true: 4.95233050413
+5e+19 resulted with a difference of 1.0587134772%
+1e+20 resulted with a difference of 2.30095949771%
+1.5e+20 resulted with a difference of 3.32222522423%
+2e+20 resulted with a difference of 4.85563948421%
+2.5e+20 resulted with a difference of 5.8837681991%
+3e+20 resulted with a difference of 6.94264515138%
+3.5e+20 resulted with a difference of 8.5089867597%
+4e+20 resulted with a difference of 9.55607434459%
+4.5e+20 resulted with a difference of 10.6043993372%
+5e+20 resulted with a difference of 11.6469259057%
