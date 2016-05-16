@@ -1,0 +1,4 @@
+NH is: 2.5e+20
+Noise is: 3
+Difference of noise with gaus: 7.72310089626
+Difference of noise with true: 4.94567414593
